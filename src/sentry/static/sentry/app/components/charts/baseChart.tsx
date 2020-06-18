@@ -3,7 +3,7 @@ import 'zrender/lib/svg/svg';
 import PropTypes from 'prop-types';
 import React from 'react';
 import ReactEchartsCore from 'echarts-for-react/lib/core';
-import echarts from 'echarts/lib/echarts';
+import echarts, {EChartOption} from 'echarts/lib/echarts';
 import styled from '@emotion/styled';
 
 import {callIfFunction} from 'app/utils/callIfFunction';
@@ -19,13 +19,131 @@ import XAxis from './components/xAxis';
 import YAxis from './components/yAxis';
 
 // If dimension is a number convert it to pixels, otherwise use dimension without transform
-const getDimensionValue = dimension => {
+const getDimensionValue = (dimension: number | string) => {
   if (typeof dimension === 'number') {
     return `${dimension}px`;
   }
 
   return dimension;
 };
+
+type Props = {
+  options?: EChartOption;
+
+  // Chart Series
+  // This is different than the interface to higher level charts, these need to be
+  // an array of ECharts "Series" components.
+  series?: EChartOption.Series[];
+
+  // Array of color codes to use in charts
+  colors?: string[];
+
+  // Must be explicitly `null` to disable xAxis
+  xAxis?: EChartOption.XAxis;
+
+  // Must be explicitly `null` to disable yAxis
+  yAxis?: EChartOption.YAxis;
+
+  // Pass `true` to have 2 y-axes with default properties
+  // Can pass an array of objects to customize yAxis properties
+  yAxes?: true | EChartOption.YAxis[];
+
+  // Pass `true` to have 2 x-axes with default properties
+  // Can pass an array of multiple objects to customize xAxis properties
+  xAxes?: true | EChartOption.XAxis[];
+
+  // Tooltip options
+  tooltip?: EChartOption.Tooltip;
+
+  // DataZoom (allows for zooming of chart)
+  dataZoom?: EChartOption.DataZoom | EChartOption.DataZoom[];
+
+  // Axis pointer options
+  axisPointer?: EChartOption.AxisPointer;
+
+  //   toolBox: SentryTypes.EChartsToolBox;
+
+  //   graphic: SentryTypes.EchartsGraphic;
+
+  // ECharts Grid options
+  // multiple grids allow multiple sub-graphs.
+  grid?: EChartOption.Grid | EChartOption.Grid[];
+
+  // Chart legend
+  legend?: EChartOption.Legend;
+
+  // Chart height
+  height?: number | string;
+
+  // Chart width
+  width?: number | string;
+
+  // Use `canvas` when dealing with large datasets
+  // See: https://ecomfe.github.io/echarts-doc/public/en/tutorial.html#Render%20by%20Canvas%20or%20SVG
+  renderer?: 'canvas' | 'svg';
+
+  devicePixelRatio?: string | number;
+
+  // theme name
+  // example theme: https://github.com/apache/incubator-echarts/blob/master/theme/dark.js
+  theme?: PropTypes.string;
+
+  // states whether or not to merge with previous `option`
+  notMerge: boolean;
+
+  // states whether not to prevent triggering events when calling setOption
+  silent: boolean;
+
+  // states whether not to update chart immediately
+  lazyUpdate: boolean;
+
+  //     // eCharts Event Handlers
+  //     // callback when chart is ready
+  //   onChartReady: PropTypes.func;
+  //   onHighlight: PropTypes.func;
+  //   onMouseOver: PropTypes.func;
+  //   onClick: PropTypes.func;
+
+  //     // Zoom on chart
+  //   onDataZoom: PropTypes.func;
+
+  //     // One example of when this is called is restoring chart from zoom levels
+  //   onRestore: PropTypes.func;
+
+  //   onFinished: PropTypes.func;
+
+  //     // Forwarded Ref
+  //   forwardedRef: PropTypes.oneOfType([PropTypes.object; PropTypes.func]);
+
+  //     // Custom chart props that are implemented by us (and not a feature of eCharts)
+  //     /**
+  //      * Display previous period as a LineSeries
+  //      */
+  //   previousPeriod: PropTypes.arrayOf(SentryTypes.SeriesUnit);
+
+  //   // If data is grouped by date; then apply default date formatting to
+  //     // x-axis and tooltips.
+  //   isGroupedByDate: boolean
+
+  //     /**
+  //      * Format timestamp with date AND time
+  //      */
+  //   showTimeInTooltip: boolean
+
+  //     // Use short date formatting for xAxis
+  //   useShortDate: boolean
+
+  //     // These are optional and are used to determine how xAxis is formatted
+  //     // if `isGroupedByDate == true`
+  //   start: Date
+  //   end: Date
+  //   period: string
+
+  //     // Formats dates as UTC?
+  //   utc: boolean;
+};
+
+type Test = Props['xAxis'];
 
 class BaseChart extends React.Component {
   static propTypes = {
@@ -347,14 +465,14 @@ const ChartContainer = styled('div')`
   /* Tooltip styling */
   .tooltip-series,
   .tooltip-date {
-    color: ${theme.gray500};
-    font-family: ${theme.text.family};
-    background: ${theme.gray800};
+    color: ${p => p.theme.gray500};
+    font-family: ${p => p.theme.text.family};
+    background: ${p => p.theme.gray800};
     padding: ${space(1)} ${space(2)};
-    border-radius: ${theme.borderRadius} ${theme.borderRadius} 0 0;
+    border-radius: ${p => p.theme.borderRadius} ${p => p.theme.borderRadius} 0 0;
   }
   .tooltip-series-solo {
-    border-radius: ${theme.borderRadius};
+    border-radius: ${p => p.theme.borderRadius};
   }
   .tooltip-label {
     margin-right: ${space(1)};
@@ -369,11 +487,11 @@ const ChartContainer = styled('div')`
     align-items: baseline;
   }
   .tooltip-date {
-    border-top: 1px solid ${theme.gray600};
+    border-top: 1px solid ${p => p.theme.gray600};
     text-align: center;
     position: relative;
     width: auto;
-    border-radius: ${theme.borderRadiusBottom};
+    border-radius: ${p => p.theme.borderRadiusBottom};
   }
   .tooltip-arrow {
     top: 100%;
@@ -384,7 +502,7 @@ const ChartContainer = styled('div')`
     width: 0;
     position: absolute;
     pointer-events: none;
-    border-top-color: ${theme.gray800};
+    border-top-color: ${p => p.theme.gray800};
     border-width: 8px;
     margin-left: -8px;
   }
