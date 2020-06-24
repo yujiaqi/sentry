@@ -12,7 +12,11 @@ type StorageValue = {
 };
 
 // TODO(Priscila): add the method below in app/utils
+<<<<<<< HEAD
 function fetchFromStorage(): StorageValue | undefined {
+=======
+const fetchFromStorage = (): StorageValue | undefined => {
+>>>>>>> ref(pii): Replace dialog with GlobalModal
   const storage = localStorage.getItem(ADVANCED_DATA_SCRUBBING_LOCALSTORAGE_KEY);
   if (!storage) {
     return undefined;
@@ -27,9 +31,15 @@ function fetchFromStorage(): StorageValue | undefined {
     });
     return undefined;
   }
+<<<<<<< HEAD
 }
 
 function saveToStorage(obj: StorageValue) {
+=======
+};
+
+const saveToStorage = (obj: StorageValue) => {
+>>>>>>> ref(pii): Replace dialog with GlobalModal
   try {
     localStorage.setItem(ADVANCED_DATA_SCRUBBING_LOCALSTORAGE_KEY, JSON.stringify(obj));
   } catch (err) {
@@ -39,6 +49,10 @@ function saveToStorage(obj: StorageValue) {
       Sentry.captureException(err);
     });
   }
+<<<<<<< HEAD
 }
+=======
+};
+>>>>>>> ref(pii): Replace dialog with GlobalModal
 
 export {fetchFromStorage, saveToStorage};
