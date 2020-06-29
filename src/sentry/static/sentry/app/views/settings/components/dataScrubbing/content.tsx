@@ -4,7 +4,7 @@ import {t} from 'app/locale';
 import EmptyMessage from 'app/views/settings/components/emptyMessage';
 import {IconWarning} from 'app/icons';
 
-import RulesList from './rulesList';
+import Rules from './rules';
 import {Rule} from './types';
 
 type Props = {
@@ -25,7 +25,7 @@ const Content = ({rules, disabled, onDeleteRule, onEditRule}: Props) => {
   }
 
   return (
-    <RulesList
+    <Rules
       rules={rules}
       onDeleteRule={onDeleteRule}
       onEditRule={onEditRule}

@@ -12,7 +12,7 @@ import {
   RuleType,
   MethodType,
   Rule,
-  ProjectId,
+  ProjectSlug,
   KeysOfUnion,
   EventIdStatus,
 } from '../types';
@@ -28,13 +28,13 @@ type Values = FormProps['values'];
 type EventId = NonNullable<FormProps['eventId']>;
 type SourceSuggestions = FormProps['sourceSuggestions'];
 
-type Props<T extends ProjectId> = ModalRenderProps & {
+type Props<T extends ProjectSlug> = ModalRenderProps & {
   onSubmitSuccess: (data: T extends undefined ? Organization : Project) => void;
   orgSlug: Organization['slug'];
   api: Client;
   endpoint: string;
   savedRules: Array<Rule>;
-  projectId?: T;
+  projectSlug?: T;
 };
 
 type State = {
@@ -48,19 +48,11 @@ type State = {
 };
 
 class ModalManager<
-  T extends ProjectId = undefined,
+  T extends ProjectSlug = undefined,
   P extends Props<T> = Props<T>,
   S extends State = State
 > extends React.Component<P, S> {
-<<<<<<< HEAD
   state = this.getDefaultState();
-=======
-  constructor(props: P) {
-    super(props);
-    this.handleSave = this.handleSave.bind(this);
-    this.state = this.getDefaultState() as Readonly<S>;
-  }
->>>>>>> ref(pii): Replace dialog with GlobalModal
 
   componentDidMount() {
     this.handleValidateForm();
@@ -111,11 +103,7 @@ class ModalManager<
     throw new Error('Not implemented');
   }
 
-<<<<<<< HEAD
   getRequiredValues(values: Values) {
-=======
-  getRequiredValues = (values: Values) => {
->>>>>>> ref(pii): Replace dialog with GlobalModal
     const {type} = values;
     const requiredValues: Array<KeysOfUnion<Values>> = ['type', 'method', 'source'];
 
@@ -124,7 +112,6 @@ class ModalManager<
     }
 
     return requiredValues;
-<<<<<<< HEAD
   }
 
   clearError<F extends keyof Values>(field: F) {
@@ -134,18 +121,7 @@ class ModalManager<
   }
 
   async loadSourceSuggestions() {
-=======
-  };
-
-  clearError = <F extends keyof Values>(field: F) => {
-    this.setState(prevState => ({
-      errors: omit(prevState.errors, field),
-    }));
-  };
-
-  loadSourceSuggestions = async () => {
->>>>>>> ref(pii): Replace dialog with GlobalModal
-    const {orgSlug, projectId, api} = this.props;
+    const {orgSlug, projectSlug, api} = this.props;
     const {eventId} = this.state;
 
     if (!eventId.value) {
@@ -169,8 +145,8 @@ class ModalManager<
 
     try {
       const query: {projectId?: string; eventId: string} = {eventId: eventId.value};
-      if (projectId) {
-        query.projectId = projectId;
+      if (projectSlug) {
+        query.projectId = projectSlug;
       }
       const rawSuggestions = await api.requestPromise(
         `/organizations/${orgSlug}/data-scrubbing-selector-suggestions/`,
@@ -204,15 +180,9 @@ class ModalManager<
         },
       }));
     }
-<<<<<<< HEAD
   }
 
   convertRequestError(error: ReturnType<typeof handleError>) {
-=======
-  };
-
-  convertRequestError = (error: ReturnType<typeof handleError>) => {
->>>>>>> ref(pii): Replace dialog with GlobalModal
     switch (error.type) {
       case 'invalid-selector':
         this.setState(prevState => ({
@@ -233,11 +203,7 @@ class ModalManager<
       default:
         addErrorMessage(error.message);
     }
-<<<<<<< HEAD
   }
-=======
-  };
->>>>>>> ref(pii): Replace dialog with GlobalModal
 
   handleChange = <R extends Rule, K extends KeysOfUnion<R>>(field: K, value: R[K]) => {
     const values = {
@@ -265,19 +231,11 @@ class ModalManager<
     }
   };
 
-<<<<<<< HEAD
   handleValidateForm() {
     const {values, requiredValues} = this.state;
     const isFormValid = requiredValues.every(requiredValue => !!values[requiredValue]);
     this.setState({isFormValid});
   }
-=======
-  handleValidateForm = () => {
-    const {values, requiredValues} = this.state;
-    const isFormValid = requiredValues.every(requiredValue => !!values[requiredValue]);
-    this.setState({isFormValid});
-  };
->>>>>>> ref(pii): Replace dialog with GlobalModal
 
   handleValidate = <K extends keyof Values>(field: K) => () => {
     const isFieldValueEmpty = !this.state.values[field].trim();

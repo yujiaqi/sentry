@@ -14,7 +14,7 @@ import {openModal} from 'app/actionCreators/modal';
 import Edit from './modals/edit';
 import Add from './modals/add';
 import OrganizationRules from './organizationRules';
-import {Rule, ProjectId} from './types';
+import {Rule, ProjectSlug} from './types';
 import convertRelayPiiConfig from './convertRelayPiiConfig';
 import submitRules from './submitRules';
 import Content from './content';
@@ -22,11 +22,11 @@ import Content from './content';
 const ADVANCED_DATASCRUBBING_LINK =
   'https://docs.sentry.io/data-management/advanced-datascrubbing/';
 
-type Props<T extends ProjectId> = {
+type Props<T extends ProjectSlug> = {
   endpoint: string;
   organization: Organization;
   onSubmitSuccess?: (data: T extends undefined ? Organization : Project) => void;
-  projectId?: T;
+  projectSlug?: T;
   relayPiiConfig?: string;
   additionalContext?: React.ReactNode;
   disabled?: boolean;
@@ -39,7 +39,7 @@ type State = {
   relayPiiConfig?: string;
 };
 
-class DataScrubbing<T extends ProjectId = undefined> extends React.Component<
+class DataScrubbing<T extends ProjectSlug = undefined> extends React.Component<
   Props<T>,
   State
 > {
@@ -67,14 +67,10 @@ class DataScrubbing<T extends ProjectId = undefined> extends React.Component<
 
   api = new Client();
 
-<<<<<<< HEAD
   loadOrganizationRules() {
-=======
-  loadOrganizationRules = () => {
->>>>>>> ref(pii): Replace dialog with GlobalModal
-    const {organization, projectId} = this.props;
+    const {organization, projectSlug} = this.props;
 
-    if (projectId) {
+    if (projectSlug) {
       try {
         this.setState({
           orgRules: convertRelayPiiConfig(organization.relayPiiConfig),
@@ -97,71 +93,48 @@ class DataScrubbing<T extends ProjectId = undefined> extends React.Component<
     }
   }
 
-<<<<<<< HEAD
   successfullySaved(
     response: T extends undefined ? Organization : Project,
     successMessage: string
   ) {
-=======
-  successfullySaved = (
-    response: T extends undefined ? Organization : Project,
-    successMessage: string
-  ) => {
->>>>>>> ref(pii): Replace dialog with GlobalModal
     const {onSubmitSuccess} = this.props;
     this.setState({rules: convertRelayPiiConfig(response.relayPiiConfig)});
     addSuccessMessage(successMessage);
     if (onSubmitSuccess) {
       onSubmitSuccess(response);
     }
-<<<<<<< HEAD
   }
-=======
-  };
->>>>>>> ref(pii): Replace dialog with GlobalModal
 
   handleOpenAddModal = () => {
     const {rules} = this.state;
     openModal(modalProps => (
       <Add
         {...modalProps}
-        projectId={this.props.projectId}
+        projectSlug={this.props.projectSlug}
         savedRules={rules}
         api={this.api}
         endpoint={this.props.endpoint}
         orgSlug={this.props.organization.slug}
         onSubmitSuccess={response => {
-<<<<<<< HEAD
           this.successfullySaved(response, t('Successfully added data scrubbing rule'));
-=======
-          this.successfullySaved(response, 'Successfully added data scrubbing rule');
->>>>>>> ref(pii): Replace dialog with GlobalModal
         }}
       />
     ));
   };
 
-<<<<<<< HEAD
   handleOpenEditModal = (id: Rule['id']) => () => {
-=======
-  handleOpenAEditModal = (id: Rule['id']) => () => {
->>>>>>> ref(pii): Replace dialog with GlobalModal
     const {rules} = this.state;
     openModal(modalProps => (
       <Edit
         {...modalProps}
         rule={rules[id]}
-        projectId={this.props.projectId}
+        projectSlug={this.props.projectSlug}
         savedRules={rules}
         api={this.api}
         endpoint={this.props.endpoint}
         orgSlug={this.props.organization.slug}
         onSubmitSuccess={response => {
-<<<<<<< HEAD
           this.successfullySaved(response, t('Successfully updated data scrubbing rule'));
-=======
-          this.successfullySaved(response, 'Successfully updated data scrubbing rule');
->>>>>>> ref(pii): Replace dialog with GlobalModal
         }}
       />
     ));
@@ -175,23 +148,17 @@ class DataScrubbing<T extends ProjectId = undefined> extends React.Component<
       const data = await submitRules(this.api, this.props.endpoint, filteredRules);
       if (data?.relayPiiConfig) {
         const convertedRules = convertRelayPiiConfig(data.relayPiiConfig);
+
         this.setState({rules: convertedRules});
-<<<<<<< HEAD
         addSuccessMessage(t('Successfully deleted data scrubbing rule'));
       }
     } catch {
       addErrorMessage(t('An unknown error occurred while deleting data scrubbing rule'));
-=======
-        addSuccessMessage('Successfully deleted data scrubbing rule');
-      }
-    } catch {
-      addErrorMessage('An unknown error occurred while deleting data scrubbing rule');
->>>>>>> ref(pii): Replace dialog with GlobalModal
     }
   };
 
   render() {
-    const {additionalContext, disabled, projectId} = this.props;
+    const {additionalContext, disabled, projectSlug} = this.props;
     const {orgRules, rules} = this.state;
 
     return (
@@ -212,15 +179,11 @@ class DataScrubbing<T extends ProjectId = undefined> extends React.Component<
             })}
           </PanelAlert>
           <PanelBody>
-            {projectId && <OrganizationRules rules={orgRules} />}
+            {projectSlug && <OrganizationRules rules={orgRules} />}
             <Content
               rules={rules}
               onDeleteRule={this.handleDelete}
-<<<<<<< HEAD
               onEditRule={this.handleOpenEditModal}
-=======
-              onEditRule={this.handleOpenAEditModal}
->>>>>>> ref(pii): Replace dialog with GlobalModal
               disabled={disabled}
             />
             <PanelAction>

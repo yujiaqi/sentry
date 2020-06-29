@@ -37,7 +37,7 @@ const getListItemDescription = (rule: Rule) => {
   return `${descriptionDetails.join(' ')} ${t('from')} [${source}]`;
 };
 
-const RulesList = React.forwardRef(function RulesList(
+const Rules = React.forwardRef(function RulesList(
   {rules, onEditRule, onDeleteRule, disabled}: Props,
   ref: React.Ref<HTMLUListElement>
 ) {
@@ -73,7 +73,7 @@ const RulesList = React.forwardRef(function RulesList(
   );
 });
 
-export default RulesList;
+export default Rules;
 
 const List = styled('ul')<{isDisabled?: boolean}>`
   list-style: none;

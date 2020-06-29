@@ -40,7 +40,6 @@ class EventIdField extends React.Component<Props, State> {
   getErrorMessage(): string | undefined {
     const {status} = this.state;
 
-<<<<<<< HEAD:src/sentry/static/sentry/app/views/settings/components/dataScrubbing/modals/form/eventIdField.tsx
     switch (status) {
       case EventIdStatus.INVALID:
         return t('This event ID is invalid.');
@@ -52,21 +51,10 @@ class EventIdField extends React.Component<Props, State> {
         return t('The chosen event ID was not found in projects you have access to.');
       default:
         return undefined;
-=======
-    if (eventId !== this.state.value) {
-      this.setState({
-        value: eventId,
-        status: EventIdStatus.UNDEFINED,
-      });
->>>>>>> ref(pii): Replace dialog with GlobalModal:src/sentry/static/sentry/app/views/settings/components/dataScrubbing/form/eventIdField.tsx
     }
   }
 
-<<<<<<< HEAD:src/sentry/static/sentry/app/views/settings/components/dataScrubbing/modals/form/eventIdField.tsx
   isEventIdValid(): boolean {
-=======
-  isEventIdValid = (): boolean => {
->>>>>>> ref(pii): Replace dialog with GlobalModal:src/sentry/static/sentry/app/views/settings/components/dataScrubbing/form/eventIdField.tsx
     const {value, status} = this.state;
 
     if (value && value.length !== 32) {

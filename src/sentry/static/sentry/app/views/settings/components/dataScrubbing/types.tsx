@@ -126,4 +126,4 @@ export type Applications = Record<string, Array<string>>;
 
 export type Errors = Partial<Record<KeysOfUnion<Rule>, string>>;
 
-export type ProjectId = Project['id'] | undefined;
+export type ProjectSlug = Project['id'] | undefined;

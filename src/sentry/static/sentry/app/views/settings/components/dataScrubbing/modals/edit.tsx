@@ -3,15 +3,15 @@ import omit from 'lodash/omit';
 import {t} from 'app/locale';
 
 import ModalManager from './modalManager';
-import {ProjectId, Rule} from '../types';
+import {ProjectSlug, Rule} from '../types';
 
-type Props<T extends ProjectId> = ModalManager<T>['props'] & {
+type Props<T extends ProjectSlug> = ModalManager<T>['props'] & {
   rule: Rule;
 };
 
 type State = ModalManager['state'];
 
-class Edit<T extends ProjectId> extends ModalManager<T, Props<T>, State> {
+class Edit<T extends ProjectSlug> extends ModalManager<T, Props<T>, State> {
   getDefaultState() {
     const {rule} = this.props;
     const values: ModalManager['state']['values'] = {
