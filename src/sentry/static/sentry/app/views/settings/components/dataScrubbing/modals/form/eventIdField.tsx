@@ -31,24 +31,30 @@ class EventIdField extends React.Component<Props, State> {
     }
   }
 
-  loadState = () => {
+  loadState() {
     this.setState({
       ...this.props.eventId,
     });
-  };
+  }
 
-  handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    const eventId = event.target.value.replace(/-/g, '').trim();
+  getErrorMessage(): string | undefined {
+    const {status} = this.state;
 
-    if (eventId !== this.state.value) {
-      this.setState({
-        value: eventId,
-        status: EventIdStatus.UNDEFINED,
-      });
+    switch (status) {
+      case EventIdStatus.INVALID:
+        return t('This event ID is invalid.');
+      case EventIdStatus.ERROR:
+        return t(
+          'An error occurred while fetching the suggestions based on this Event ID.'
+        );
+      case EventIdStatus.NOT_FOUND:
+        return t('The chosen event ID was not found in projects you have access to.');
+      default:
+        return undefined;
     }
-  };
+  }
 
-  isEventIdValid = (): boolean => {
+  isEventIdValid(): boolean {
     const {value, status} = this.state;
 
     if (value && value.length !== 32) {
@@ -61,6 +67,17 @@ class EventIdField extends React.Component<Props, State> {
     }
 
     return true;
+  }
+
+  handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const eventId = event.target.value.replace(/-/g, '').trim();
+
+    if (eventId !== this.state.value) {
+      this.setState({
+        value: eventId,
+        status: EventIdStatus.UNDEFINED,
+      });
+    }
   };
 
   handleBlur = (event: React.FocusEvent<HTMLInputElement>) => {
@@ -84,23 +101,6 @@ class EventIdField extends React.Component<Props, State> {
       value: '',
       status: EventIdStatus.UNDEFINED,
     });
-  };
-
-  getErrorMessage = (): string | undefined => {
-    const {status} = this.state;
-
-    switch (status) {
-      case EventIdStatus.INVALID:
-        return t('This event ID is invalid.');
-      case EventIdStatus.ERROR:
-        return t(
-          'An error occurred while fetching the suggestions based on this Event ID.'
-        );
-      case EventIdStatus.NOT_FOUND:
-        return t('The chosen event ID was not found in projects you have access to.');
-      default:
-        return undefined;
-    }
   };
 
   render() {

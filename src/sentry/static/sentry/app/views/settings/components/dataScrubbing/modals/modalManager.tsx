@@ -52,11 +52,7 @@ class ModalManager<
   P extends Props<T> = Props<T>,
   S extends State = State
 > extends React.Component<P, S> {
-  constructor(props: P) {
-    super(props);
-    this.handleSave = this.handleSave.bind(this);
-    this.state = this.getDefaultState() as Readonly<S>;
-  }
+  state = this.getDefaultState();
 
   componentDidMount() {
     this.handleValidateForm();
@@ -107,7 +103,7 @@ class ModalManager<
     throw new Error('Not implemented');
   }
 
-  getRequiredValues = (values: Values) => {
+  getRequiredValues(values: Values) {
     const {type} = values;
     const requiredValues: Array<KeysOfUnion<Values>> = ['type', 'method', 'source'];
 
@@ -116,15 +112,15 @@ class ModalManager<
     }
 
     return requiredValues;
-  };
+  }
 
-  clearError = <F extends keyof Values>(field: F) => {
+  clearError<F extends keyof Values>(field: F) {
     this.setState(prevState => ({
       errors: omit(prevState.errors, field),
     }));
-  };
+  }
 
-  loadSourceSuggestions = async () => {
+  async loadSourceSuggestions() {
     const {orgSlug, projectId, api} = this.props;
     const {eventId} = this.state;
 
@@ -184,9 +180,9 @@ class ModalManager<
         },
       }));
     }
-  };
+  }
 
-  convertRequestError = (error: ReturnType<typeof handleError>) => {
+  convertRequestError(error: ReturnType<typeof handleError>) {
     switch (error.type) {
       case 'invalid-selector':
         this.setState(prevState => ({
@@ -207,7 +203,7 @@ class ModalManager<
       default:
         addErrorMessage(error.message);
     }
-  };
+  }
 
   handleChange = <R extends Rule, K extends KeysOfUnion<R>>(field: K, value: R[K]) => {
     const values = {
@@ -235,11 +231,11 @@ class ModalManager<
     }
   };
 
-  handleValidateForm = () => {
+  handleValidateForm() {
     const {values, requiredValues} = this.state;
     const isFormValid = requiredValues.every(requiredValue => !!values[requiredValue]);
     this.setState({isFormValid});
-  };
+  }
 
   handleValidate = <K extends keyof Values>(field: K) => () => {
     const isFieldValueEmpty = !this.state.values[field].trim();

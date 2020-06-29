@@ -12,7 +12,7 @@ type StorageValue = {
 };
 
 // TODO(Priscila): add the method below in app/utils
-const fetchFromStorage = (): StorageValue | undefined => {
+function fetchFromStorage(): StorageValue | undefined {
   const storage = localStorage.getItem(ADVANCED_DATA_SCRUBBING_LOCALSTORAGE_KEY);
   if (!storage) {
     return undefined;
@@ -27,9 +27,9 @@ const fetchFromStorage = (): StorageValue | undefined => {
     });
     return undefined;
   }
-};
+}
 
-const saveToStorage = (obj: StorageValue) => {
+function saveToStorage(obj: StorageValue) {
   try {
     localStorage.setItem(ADVANCED_DATA_SCRUBBING_LOCALSTORAGE_KEY, JSON.stringify(obj));
   } catch (err) {
@@ -39,6 +39,6 @@ const saveToStorage = (obj: StorageValue) => {
       Sentry.captureException(err);
     });
   }
-};
+}
 
 export {fetchFromStorage, saveToStorage};

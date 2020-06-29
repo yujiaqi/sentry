@@ -67,7 +67,7 @@ class DataScrubbing<T extends ProjectId = undefined> extends React.Component<
 
   api = new Client();
 
-  loadOrganizationRules = () => {
+  loadOrganizationRules() {
     const {organization, projectId} = this.props;
 
     if (projectId) {
@@ -79,7 +79,7 @@ class DataScrubbing<T extends ProjectId = undefined> extends React.Component<
         addErrorMessage(t('Unable to load organization rules'));
       }
     }
-  };
+  }
 
   loadRules() {
     try {
@@ -93,17 +93,17 @@ class DataScrubbing<T extends ProjectId = undefined> extends React.Component<
     }
   }
 
-  successfullySaved = (
+  successfullySaved(
     response: T extends undefined ? Organization : Project,
     successMessage: string
-  ) => {
+  ) {
     const {onSubmitSuccess} = this.props;
     this.setState({rules: convertRelayPiiConfig(response.relayPiiConfig)});
     addSuccessMessage(successMessage);
     if (onSubmitSuccess) {
       onSubmitSuccess(response);
     }
-  };
+  }
 
   handleOpenAddModal = () => {
     const {rules} = this.state;
@@ -116,13 +116,13 @@ class DataScrubbing<T extends ProjectId = undefined> extends React.Component<
         endpoint={this.props.endpoint}
         orgSlug={this.props.organization.slug}
         onSubmitSuccess={response => {
-          this.successfullySaved(response, 'Successfully added data scrubbing rule');
+          this.successfullySaved(response, t('Successfully added data scrubbing rule'));
         }}
       />
     ));
   };
 
-  handleOpenAEditModal = (id: Rule['id']) => () => {
+  handleOpenEditModal = (id: Rule['id']) => () => {
     const {rules} = this.state;
     openModal(modalProps => (
       <Edit
@@ -134,7 +134,7 @@ class DataScrubbing<T extends ProjectId = undefined> extends React.Component<
         endpoint={this.props.endpoint}
         orgSlug={this.props.organization.slug}
         onSubmitSuccess={response => {
-          this.successfullySaved(response, 'Successfully updated data scrubbing rule');
+          this.successfullySaved(response, t('Successfully updated data scrubbing rule'));
         }}
       />
     ));
@@ -149,10 +149,10 @@ class DataScrubbing<T extends ProjectId = undefined> extends React.Component<
       if (data?.relayPiiConfig) {
         const convertedRules = convertRelayPiiConfig(data.relayPiiConfig);
         this.setState({rules: convertedRules});
-        addSuccessMessage('Successfully deleted data scrubbing rule');
+        addSuccessMessage(t('Successfully deleted data scrubbing rule'));
       }
     } catch {
-      addErrorMessage('An unknown error occurred while deleting data scrubbing rule');
+      addErrorMessage(t('An unknown error occurred while deleting data scrubbing rule'));
     }
   };
 
@@ -182,7 +182,7 @@ class DataScrubbing<T extends ProjectId = undefined> extends React.Component<
             <Content
               rules={rules}
               onDeleteRule={this.handleDelete}
-              onEditRule={this.handleOpenAEditModal}
+              onEditRule={this.handleOpenEditModal}
               disabled={disabled}
             />
             <PanelAction>

@@ -2,7 +2,7 @@ import {fetchFromStorage, saveToStorage} from './localStorage';
 import {EventIdStatus, EventId} from '../types';
 import {valueSuggestions} from '../utils';
 
-const fetchSourceGroupData = () => {
+function fetchSourceGroupData() {
   const fetchedSourceGroupData = fetchFromStorage();
   if (!fetchedSourceGroupData) {
     const sourceGroupData: Parameters<typeof saveToStorage>[0] = {
@@ -13,12 +13,9 @@ const fetchSourceGroupData = () => {
     return sourceGroupData;
   }
   return fetchedSourceGroupData;
-};
+}
 
-const saveToSourceGroupData = (
-  eventId: EventId,
-  sourceSuggestions = valueSuggestions
-) => {
+function saveToSourceGroupData(eventId: EventId, sourceSuggestions = valueSuggestions) {
   switch (eventId.status) {
     case EventIdStatus.LOADING:
       break;
@@ -28,6 +25,6 @@ const saveToSourceGroupData = (
     default:
       saveToStorage({eventId: '', sourceSuggestions});
   }
-};
+}
 
 export {fetchSourceGroupData, saveToSourceGroupData};

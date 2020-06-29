@@ -5,8 +5,11 @@ type Error = {
   message: string;
 };
 
-// TODO(ts): define the correct error type
-function handleError(error: any): Error {
+type XhrError = {
+  responseJSON?: Record<string, Array<string>>;
+};
+
+function handleError(error: XhrError): Error {
   const errorMessage = error.responseJSON?.relayPiiConfig[0];
 
   if (!errorMessage) {

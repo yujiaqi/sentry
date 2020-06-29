@@ -29,14 +29,14 @@ class OrganizationRules extends React.Component<Props, State> {
 
   rulesListRef = React.createRef<HTMLUListElement>();
 
-  loadContentHeight = () => {
+  loadContentHeight() {
     if (!this.state.contentHeight) {
       const contentHeight = this.rulesListRef.current?.offsetHeight;
       if (contentHeight) {
         this.setState({contentHeight: `${contentHeight}px`});
       }
     }
-  };
+  }
 
   handleToggleCollapsed = () => {
     this.setState(prevState => ({
